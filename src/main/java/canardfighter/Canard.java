@@ -22,8 +22,15 @@ public abstract class Canard {
      */
     private TypeCanard typeCanard;
 
+    public Canard(String _nom, int _pv, int _atk, TypeCanard _typeCanard) {
+        this.nom = _nom;
+        this.pv = _pv;
+        this.atk = _atk;
+        this.typeCanard = _typeCanard;
+    }
+
     public int attaquer(Canard cible) {
-        return 0; // stub
+        return (int) (atk*TypeCanard.getMultiplicateur(typeCanard,cible.typeCanard));
     }
 
     public void subirDegats(int degats) {
