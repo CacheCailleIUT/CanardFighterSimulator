@@ -1,6 +1,6 @@
 package canardfighter;
 
-public class Canard {
+public abstract class Canard {
 
     private String nom;
 
@@ -17,6 +17,9 @@ public class Canard {
      */
     private int atk;
 
+    /**
+     * Type du canard
+     */
     private TypeCanard typeCanard;
 
     public int attaquer(Canard cible) {
@@ -30,6 +33,8 @@ public class Canard {
     public boolean estKO() {
         return pv == 0 ;
     }
+
+    public abstract void activerCapaciteSpeciale();
 
     public String getNom() {
         return nom;
