@@ -28,4 +28,13 @@ public enum TypeCanard {
     public static double getMultiplicateur(TypeCanard attaquant, TypeCanard cible) {
         return matriceEff[attaquant.value][cible.value];
     }
+
+    public static boolean isEnum(String type) {
+        for (TypeCanard typeCanard : values()) {
+            if (typeCanard.toString().equalsIgnoreCase(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
