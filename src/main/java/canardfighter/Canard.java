@@ -47,7 +47,7 @@ public abstract class Canard {
     }
 
     public boolean estKO() {
-        return pv == 0 ;
+        return pv <= 0 ;
     }
 
     public abstract void activerCapaciteSpeciale();

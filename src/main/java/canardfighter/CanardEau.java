@@ -10,14 +10,16 @@ public class CanardEau extends Canard {
 
     @Override
     public void activerCapaciteSpeciale() {
-        System.out.println("Capacité spéciale activé !");
         if (!usedCapacite) {
             int pvActuelle = getPv();
             pvActuelle += REGEN_CAPA;
             if (pvActuelle >= getPvBase()) {
                 pvActuelle = getPvBase();
             }
+            System.out.println(getNom() + " s'est soigné de " + (pvActuelle - getPv()) + " PV.\n" + getNom() + " a " + pvActuelle + " PV restants.");
             setPv(pvActuelle);
+        } else {
+            System.out.println("Capacité spécial déjà utilisé pour ce combat !");
         }
         usedCapacite = true;
     }

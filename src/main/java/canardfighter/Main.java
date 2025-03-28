@@ -140,8 +140,53 @@ public class Main {
         while (deuxiemeCanard == null) {
             deuxiemeCanard = choixCanard(scan);
         }
+
+        // TODO FIX COMBAT 
+        while (!premierCanard.estKO() && !deuxiemeCanard.estKO()) {
+            action(scan, premierCanard, deuxiemeCanard);
+            action(scan, deuxiemeCanard, premierCanard);
+        }
     }
 
+    private static void action(Scanner scan, Canard canard, Canard cible) {
+        System.out.println("----------------------------------\nAu tour de : " + canard.getNom());
+        System.out.println("Choisissez une action : ");
+        System.out.println("1. Attaquer");
+        if (canard.usedCapacite) {
+            System.out.println("   Capacité spéciale déjà utilisée");
+        } else {
+            System.out.println("2. Capacité spéciale");
+        }
+
+        int action = 0;
+        while (action == 0) {
+            System.out.print("Choix : ");
+            action = choixAction(scan, canard.usedCapacite);
+        }
+        if (action == 1) {
+            int dgt = canard.attaquer(cible);
+            cible.subirDegats(dgt);
+            System.out.println(canard.getNom() + " inflige "
+                    + dgt + " degats à " + cible.getNom() + ".\n"
+                    + cible.getNom() + " a " + cible.getPv() + " PV restants.");
+        } else if (action == 2) {
+            canard.activerCapaciteSpeciale();
+        }
+
+    }
+    private static int choixAction(Scanner scan, boolean usedCapacite) {
+        while (!scan.hasNextInt()) {
+            scan.next();
+            System.out.println("Veuillez choisir une action existante ");
+            System.out.print("Choix : ");
+        }
+        int action = scan.nextInt();
+        if (action <= 0 || (usedCapacite && action == 2)) {
+            System.out.println("Action invalide");
+            action = 0;
+        }
+        return action;
+    }
     private static Canard choixCanard(Scanner scan) {
         try {
             while (!scan.hasNextInt() && (scan.nextInt() > canardCrees.size() || scan.nextInt() <= 0) ) {
