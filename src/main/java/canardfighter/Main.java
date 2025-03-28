@@ -25,7 +25,9 @@ public class Main {
                     battle(scan);
                     break;
                 case 3:
-                    canardCrees.forEach(System.out::println);
+                    System.out.println("------------------------------------------------\n\t\t\t\t\tCANARDEX\n");
+                    afficherListeCanard();
+                    System.out.println("------------------------------------------------");
                     break;
                 case 4:
                     System.out.println("Merci d'avoir joué");
@@ -66,15 +68,7 @@ public class Main {
             System.out.print("ATK : ");
             atk = askAtk(scan);
         }
-        /*System.out.println("Quel est le type de votre canard ?\n(Type accepté : EAU, FEU, GLACE, VENT)");
-        System.out.print("Type : ");
-        String type = scan.next().trim();
-        scan.nextLine();
-        while (!TypeCanard.isEnum(type)) {
-            System.out.println("Veuillez entrer un type correct\n(Type accepté : EAU, FEU, GLACE, VENT)");
-            System.out.print("Type : ");
-            type = scan.next().trim();
-        }*/
+
         System.out.println("Quel est le type de votre canard ?\n1. EAU\n2. FEU\n3. GLACE\n4. VENT");
         int typeChoix = -1;
         while (typeChoix == -1) {
@@ -127,43 +121,50 @@ public class Main {
     }
 
     private static void battle(Scanner scan) {
-        if (canardCrees.size() < 2) {
+        if (canardCrees.isEmpty()) {
             System.out.println("Vous n'avez pas assez de Canard pour commencer une bataille !");
+            return;
         }
         System.out.println("Veuillez choisir le premier canard :\n(Entrer 1 pour le premier, 2 pour le deuxième, ...) ");
+        afficherListeCanard();
+        System.out.print("Choix : ");
+        Canard premierCanard = null;
+        while (premierCanard == null) {
+            premierCanard = choixCanard(scan);
+        }
+
+        System.out.println("Veuillez choisir le deuxième canard :\n(Entrer 1 pour le premier, 2 pour le deuxième, ...) ");
+        afficherListeCanard();
+        System.out.print("Choix : ");
+        Canard deuxiemeCanard = null;
+        while (deuxiemeCanard == null) {
+            deuxiemeCanard = choixCanard(scan);
+        }
+    }
+
+    private static Canard choixCanard(Scanner scan) {
+        try {
+            while (!scan.hasNextInt() && (scan.nextInt() > canardCrees.size() || scan.nextInt() <= 0) ) {
+                scan.next();
+                System.out.println("Veuillez choisir un canard existant ");
+                System.out.print("Choix : ");
+            }
+            int choixCanard = scan.nextInt();
+            Canard premierCanard = canardCrees.get(choixCanard-1);
+            System.out.println("Canard choisi : " + premierCanard);
+            return premierCanard;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Ce canard n'existe pas");
+            return null;
+        }
+    }
+
+    private static void afficherListeCanard() {
         int count = 1;
         for (Canard canard : canardCrees) {
             System.out.println(count+". " + canard);
             count++;
         }
-        System.out.print("Choix : ");
-        while (!scan.hasNextInt() && (scan.nextInt() > canardCrees.size() || scan.nextInt() <= 0) ) {
-            scan.next();
-            System.out.println("Veuillez choisir un canard existant ");
-            System.out.print("Choix : ");
-        }
-        int choixCanard = scan.nextInt();
-        Canard premierCanard = canardCrees.get(choixCanard-1);
-        System.out.println("Canard choisi : " + premierCanard);
-        premierCanard.activerCapaciteSpeciale();
-
-
-        System.out.println("Veuillez choisir le deuxième canard :\n(Entrer 1 pour le premier, 2 pour le deuxième, ...) ");
-        count = 1;
-        for (Canard canard : canardCrees) {
-            System.out.println(count+". " + canard);
-            count++;
-        }
-        System.out.print("Choix : ");
-        while (!scan.hasNextInt() && (scan.nextInt() > canardCrees.size() || scan.nextInt() <= 0) ) {
-            scan.next();
-            System.out.println("Veuillez choisir un canard existant ");
-            System.out.print("Choix : ");
-        }
-        choixCanard = scan.nextInt();
-        Canard deuxiemeCanard = canardCrees.get(choixCanard-1);
-        System.out.println("Canard choisi : " + deuxiemeCanard);
-        deuxiemeCanard.activerCapaciteSpeciale();
     }
 }
 
