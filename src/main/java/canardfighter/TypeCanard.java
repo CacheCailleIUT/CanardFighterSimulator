@@ -24,17 +24,15 @@ public enum TypeCanard {
                     {1.5, 1.0, 0.5, 1.0} // VENT
             };
 
-    // TODO Multiplicateur d'attaque
     public static double getMultiplicateur(TypeCanard attaquant, TypeCanard cible) {
         return matriceEff[attaquant.value][cible.value];
     }
 
-    public static boolean isEnum(String type) {
-        for (TypeCanard typeCanard : values()) {
-            if (typeCanard.toString().equalsIgnoreCase(type)) {
-                return true;
-            }
+    public static boolean isEnum(int type) {
+        try {
+            return matriceEff[type].length > 0;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
         }
-        return false;
     }
 }
