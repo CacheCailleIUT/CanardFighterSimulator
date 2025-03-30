@@ -7,11 +7,19 @@ public class CanardFeu extends Canard {
     }
 
     @Override
-    public void activerCapaciteSpeciale() {
-        // TODO Capacité spéciale
+    public void activerCapaciteSpeciale(Canard cible) {
         if (!usedCapacite) {
-
+            int atk = getAtk();
+            setAtk(atk *2);
         }
         usedCapacite = true;
+    }
+
+    @Override
+    public void comportementPostCapaciteSpeciale(Canard cible) {
+        if (usedCapacite && tourCapacite == 2) {
+            setAtk(getAtkBase());
+        }
+        tourCapacite++;
     }
 }

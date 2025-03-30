@@ -7,10 +7,17 @@ public class CanardGlace extends Canard {
     }
 
     @Override
-    public void activerCapaciteSpeciale() {
+    public void activerCapaciteSpeciale(Canard cible) {
         if (!usedCapacite) {
-
+            cible.etatCanard = EtatCanard.GELE;
         }
         usedCapacite = true;
+    }
+
+    @Override
+    public void comportementPostCapaciteSpeciale(Canard cible) {
+        if (usedCapacite && cible.nbEtatTour == 2 && cible.etatCanard == EtatCanard.GELE) {
+            cible.etatCanard = EtatCanard.NORMAL;
+        }
     }
 }

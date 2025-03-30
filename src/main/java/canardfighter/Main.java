@@ -8,6 +8,8 @@ public class Main {
 
     private static List<Canard> canardCrees = new ArrayList<>();
 
+    private static List<Canard> canardEnCombat = new ArrayList<>();
+
     public static void main(String[] args) {
         while (true) {
             System.out.println("1. Créer des canards\n2. Lancer une bataille\n3. Afficher les canards\n4. Quitter");
@@ -109,7 +111,7 @@ public class Main {
     private static int askType(Scanner scan) {
         while (!scan.hasNextInt()) {
             scan.next();
-            System.out.println("Veuillez entrer un des choix présentés");
+            System.out.println("Veuillez entrer un des choix présentés (1, 2, 3 ou 4)");
             System.out.print("Type : ");
         }
         int type = scan.nextInt() -1;
@@ -141,17 +143,55 @@ public class Main {
             deuxiemeCanard = choixCanard(scan);
         }
 
-        // TODO FIX COMBAT 
-        while (!premierCanard.estKO() && !deuxiemeCanard.estKO()) {
-            action(scan, premierCanard, deuxiemeCanard);
-            action(scan, deuxiemeCanard, premierCanard);
+        canardEnCombat.add(premierCanard);
+        canardEnCombat.add(deuxiemeCanard);
+
+        System.out.println("Début du combat !\nLa bataille de canard oppose " + premierCanard.getNom() + " à " + deuxiemeCanard.getNom());
+        int comptTour = 1;
+        while (true) {
+            System.out.println("----------------------------------\n\t\t\tTour n°" + comptTour);
+            int attaquant = choixPremierAttaquant(canardEnCombat); // 1 ou 0
+
+            action(scan, canardEnCombat.get(attaquant), canardEnCombat.get(1-attaquant));
+
+            if(deuxiemeCanard.estKO()) {
+                System.out.println(deuxiemeCanard.getNom() + " est KO !");
+                System.out.println(premierCanard.getNom() + " a gagné " + (int) (Math.random()*1000) + " exp.");
+                break;
+            }
+            action(scan, canardEnCombat.get(1-attaquant), canardEnCombat.get(attaquant));
+            if(premierCanard.estKO()) {
+                System.out.println(premierCanard.getNom() + " est KO !");
+                System.out.println(deuxiemeCanard.getNom() + " a gagné " + (int) (Math.random()*1000) + " exp.");
+                break;
+            }
+            comptTour++;
+        }
+        resetPostCombat(premierCanard,deuxiemeCanard);
+        canardEnCombat.clear();
+    }
+
+    private static void resetPostCombat(Canard premierCanard, Canard deuxiemeCanard) {
+        premierCanard.resetCanard();
+        deuxiemeCanard.resetCanard();
+    }
+
+
+    private static int choixPremierAttaquant(List<Canard> canardEnCombat) {
+        if (canardEnCombat.get(0).getVitesse() == canardEnCombat.get(1).getVitesse()) {
+            return (int) (Math.random()*2);
+        } else {
+            return canardEnCombat.get(0).getVitesse() > (canardEnCombat.get(1).getVitesse()) ? 0 : 1;
         }
     }
 
+
     private static void action(Scanner scan, Canard canard, Canard cible) {
-        System.out.println("----------------------------------\nAu tour de : " + canard.getNom());
-        System.out.println("Choisissez une action : ");
-        System.out.println("1. Attaquer");
+        System.out.println("###\n" + canard.getNom() +" doit choisir une action :");
+        if (!checkEtat(canard)) {
+            return;
+        }
+        System.out.println("1. Attaquer ("+canard.getAtk()+" PA)");
         if (canard.usedCapacite) {
             System.out.println("   Capacité spéciale déjà utilisée");
         } else {
@@ -169,11 +209,25 @@ public class Main {
             System.out.println(canard.getNom() + " inflige "
                     + dgt + " degats à " + cible.getNom() + ".\n"
                     + cible.getNom() + " a " + cible.getPv() + " PV restants.");
+            canard.comportementPostCapaciteSpeciale(cible);
         } else if (action == 2) {
-            canard.activerCapaciteSpeciale();
+            canard.activerCapaciteSpeciale(cible);
         }
 
     }
+
+    private static boolean checkEtat(Canard canard) {
+        switch (canard.getEtatCanard()) {
+            case GELE:
+                System.out.println(canard.getNom() + " est gelé !");
+                canard.nbEtatTour++;
+                return false;
+            case NORMAL:
+            default:
+                return true;
+        }
+    }
+
     private static int choixAction(Scanner scan, boolean usedCapacite) {
         while (!scan.hasNextInt()) {
             scan.next();
