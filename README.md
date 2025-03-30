@@ -24,3 +24,6 @@ La matrice des multiplicateurs va grandir et donc l'initialisation prendra plus 
 Pour ajouter des nouvelles capacités (dans le sens où un canard à plus d'1 capacité), 
 il faut recréer une méthode abstraite pour activer/gérer la capacité spéciale pour chaque capacité spéciale à rajouter
 (Même si on veut rajouter une capacité à un seul type).
+
+## Diagramme UML
+![Diagramme UML](canardfighter.png)
