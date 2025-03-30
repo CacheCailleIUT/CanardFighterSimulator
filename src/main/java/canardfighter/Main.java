@@ -154,13 +154,13 @@ public class Main {
 
             action(scan, canardEnCombat.get(attaquant), canardEnCombat.get(1-attaquant));
 
-            if(deuxiemeCanard.estKO()) {
+            if(canardEnCombat.get(1-attaquant).estKO()) {
                 System.out.println(deuxiemeCanard.getNom() + " est KO !");
                 System.out.println(premierCanard.getNom() + " a gagné " + (int) (Math.random()*1000) + " exp.");
                 break;
             }
             action(scan, canardEnCombat.get(1-attaquant), canardEnCombat.get(attaquant));
-            if(premierCanard.estKO()) {
+            if(canardEnCombat.get(attaquant).estKO()) {
                 System.out.println(premierCanard.getNom() + " est KO !");
                 System.out.println(deuxiemeCanard.getNom() + " a gagné " + (int) (Math.random()*1000) + " exp.");
                 break;
@@ -191,27 +191,26 @@ public class Main {
         if (!checkEtat(canard)) {
             return;
         }
-        System.out.println("1. Attaquer ("+canard.getAtk()+" PA)");
-        if (canard.usedCapacite) {
-            System.out.println("   Capacité spéciale déjà utilisée");
-        } else {
-            System.out.println("2. Capacité spéciale");
-        }
 
+        System.out.println("1. Attaquer ("+ canard.peAtk+ "/15)");
+        System.out.println("2. Capacité spéciale (" + canard.peCapa + "/5)");
+        System.out.println("3. Passer son tour");
         int action = 0;
         while (action == 0) {
             System.out.print("Choix : ");
-            action = choixAction(scan, canard.usedCapacite);
+            action = choixAction(scan, canard.peAtk, canard.peCapa);
         }
         if (action == 1) {
+            canard.comportementPostCapaciteSpeciale(cible);
             int dgt = canard.attaquer(cible);
             cible.subirDegats(dgt);
             System.out.println(canard.getNom() + " inflige "
                     + dgt + " degats à " + cible.getNom() + ".\n"
                     + cible.getNom() + " a " + cible.getPv() + " PV restants.");
-            canard.comportementPostCapaciteSpeciale(cible);
         } else if (action == 2) {
             canard.activerCapaciteSpeciale(cible);
+        } else if (action == 3) {
+            canard.peAtk = Math.min(15, canard.peAtk + 1);
         }
 
     }
@@ -228,14 +227,14 @@ public class Main {
         }
     }
 
-    private static int choixAction(Scanner scan, boolean usedCapacite) {
+    private static int choixAction(Scanner scan, int peAtk, int peCapa) {
         while (!scan.hasNextInt()) {
             scan.next();
             System.out.println("Veuillez choisir une action existante ");
             System.out.print("Choix : ");
         }
         int action = scan.nextInt();
-        if (action <= 0 || (usedCapacite && action == 2)) {
+        if (action <= 0 || (peCapa == 0 && action == 2) || (peAtk == 0 && action == 1) || action >= 4) {
             System.out.println("Action invalide");
             action = 0;
         }

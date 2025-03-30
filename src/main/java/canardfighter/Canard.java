@@ -23,6 +23,11 @@ public abstract class Canard {
     private final int atkBase;
 
     /**
+     * Points d'énergie pour les attaques
+     */
+    protected int peAtk;
+
+    /**
      * Type du canard
      */
     private final TypeCanard typeCanard;
@@ -39,6 +44,7 @@ public abstract class Canard {
      * Vérifie si elle a déjà été utilisé
      */
     protected boolean usedCapacite = false;
+    protected int peCapa;
     protected int tourCapacite = 0;
 
     protected EtatCanard etatCanard;
@@ -53,9 +59,12 @@ public abstract class Canard {
         this.typeCanard = _typeCanard;
         this.etatCanard = EtatCanard.NORMAL;
         this.vitesse = 1;
+        this.peAtk = 15;
+        this.peCapa = 5;
     }
 
     public int attaquer(Canard cible) {
+        this.peAtk--;
         return (int) (atk*TypeCanard.getMultiplicateur(typeCanard,cible.typeCanard));
     }
 
@@ -125,6 +134,8 @@ public abstract class Canard {
         this.tourCapacite = 0;
         this.pv = this.pvBase;
         this.atk = this.atkBase;
+        this.peAtk = 15;
+        this.peCapa = 5;
     }
 
     @Override

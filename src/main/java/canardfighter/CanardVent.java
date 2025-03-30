@@ -8,16 +8,16 @@ public class CanardVent extends Canard {
 
     @Override
     public void activerCapaciteSpeciale(Canard cible) {
-        // TODO Capacité spéciale
-        if (!usedCapacite) {
+        if (peCapa != 0) {
             setVitesse(2);
+            tourCapacite = 0;
+            peCapa--;
         }
-        usedCapacite = true;
     }
 
     @Override
     public void comportementPostCapaciteSpeciale(Canard cible) {
-        if (usedCapacite && tourCapacite == 2) {
+        if (tourCapacite == 2) {
             setVitesse(1);
         }
         tourCapacite++;

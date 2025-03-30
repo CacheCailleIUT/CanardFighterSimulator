@@ -8,16 +8,18 @@ public class CanardFeu extends Canard {
 
     @Override
     public void activerCapaciteSpeciale(Canard cible) {
-        if (!usedCapacite) {
+        if (peCapa != 0) {
             int atk = getAtk();
             setAtk(atk *2);
+            peCapa--;
+            tourCapacite = 0;
         }
-        usedCapacite = true;
+
     }
 
     @Override
     public void comportementPostCapaciteSpeciale(Canard cible) {
-        if (usedCapacite && tourCapacite == 2) {
+        if (tourCapacite == 2) {
             setAtk(getAtkBase());
         }
         tourCapacite++;
